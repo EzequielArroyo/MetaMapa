@@ -1,6 +1,5 @@
-package ar.edu.utn.frba.dds.webclient.dto;
+package ar.edu.utn.frba.dds.dto.output;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RolesPermisosDTO {
-  private Rol rol;
-  private List<Permiso> permisos;
+public class AuthResponse {
+    private String accessToken;
+    private String refreshToken;
 }

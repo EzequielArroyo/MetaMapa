@@ -25,7 +25,7 @@
         <module>agregador</module>
 		<module>fuenteProxy</module>
 		<module>estadistica</module>
-        <module>auth-usuario</module>
+        <module>auth</module>
 		<module>web-client</module>
     </modules>
 
