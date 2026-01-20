@@ -11,7 +11,6 @@ import ar.edu.utn.frba.dds.entities.filtro.FiltroHechoDTO;
 import ar.edu.utn.frba.dds.entities.filtro.HechoSpecifications;
 import ar.edu.utn.frba.dds.repositories.IHechoRepository;
 import ar.edu.utn.frba.dds.services.IHechoService;
-import ar.edu.utn.frba.dds.services.IMetadataService;
 import ar.edu.utn.frba.dds.utils.HechoFactory;
 import ar.edu.utn.frba.dds.utils.IWebClient;
 import java.time.LocalDateTime;
@@ -25,13 +24,11 @@ import org.springframework.stereotype.Service;
 public class HechoService implements IHechoService {
 
   private final IHechoRepository hechoRepository;
-  private final IMetadataService metadataService;
   private final IWebClient webClient;
   private final HechoFactory hechoFactory;
 
-  public HechoService(IHechoRepository hechoRepository, IMetadataService metadataService, IWebClient webClient, HechoFactory hechoFactory) {
+  public HechoService(IHechoRepository hechoRepository, IWebClient webClient, HechoFactory hechoFactory) {
     this.hechoRepository = hechoRepository;
-    this.metadataService = metadataService;
     this.webClient = webClient;
     this.hechoFactory = hechoFactory;
   }
@@ -45,9 +42,7 @@ public class HechoService implements IHechoService {
   public Hecho agregarHecho(InputHechoDto nuevoHecho) {
     String provincia = webClient.obtenerProvinciaPorCoordenada(nuevoHecho.getLatitud(), nuevoHecho.getLongitud());
     Hecho hechoACargar = hechoFactory.createFromDto(nuevoHecho, provincia);
-    Hecho hecho = hechoRepository.save(hechoACargar);
-    metadataService.actualizarMetadata();
-    return hecho;
+    return hechoRepository.save(hechoACargar);
   }
 
   public Hecho modificarHecho(Long id, InputHechoDto nuevoHecho) {

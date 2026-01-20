@@ -3,7 +3,6 @@ package ar.edu.utn.frba.dds.fuentes.estatica;
 import ar.edu.utn.frba.dds.entities.Hecho;
 import ar.edu.utn.frba.dds.entities.TipoFuente;
 import ar.edu.utn.frba.dds.entities.dto.input.HechoEstaticoDto;
-import ar.edu.utn.frba.dds.entities.dto.input.MetadataDTO;
 import ar.edu.utn.frba.dds.entities.dto.input.PageResponse;
 import ar.edu.utn.frba.dds.fuentes.IFuente;
 import java.time.LocalDateTime;
@@ -11,7 +10,6 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -33,14 +31,6 @@ public class FuenteEstatica implements IFuente {
     }
 
     @Override
-    public Mono<List<Hecho>> importarHechos() {
-        return fuente.buscarHechos()
-                .map(dtos -> dtos.stream()
-                        .map(mapper::aDominio)
-                        .toList());
-    }
-
-    @Override
     public Iterable<List<Hecho>> importarHechosPaginado(LocalDateTime fecha) {
         return () -> new Iterator<>() {
             private int page = 0;
@@ -58,7 +48,8 @@ public class FuenteEstatica implements IFuente {
                 }
 
                 PageResponse<HechoEstaticoDto> pagina = fuente.buscarHechosPaginable(page, 100, fecha);
-                if (pagina.getContent() == null || pagina.getContent().isEmpty()) {
+              pagina.getContent();
+              if (pagina.getContent().isEmpty()) {
                     finished = true;
                     logger.info("FUENTE_ESTATICA: no hay hechos a importar");
                     return List.of();
@@ -79,11 +70,5 @@ public class FuenteEstatica implements IFuente {
                 return hechos;
             }
         };
-    }
-
-
-    @Override
-    public MetadataDTO getMetadata() {
-        return fuente.buscarMetadata();
     }
 }

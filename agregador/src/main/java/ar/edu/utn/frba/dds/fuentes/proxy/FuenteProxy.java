@@ -2,17 +2,13 @@ package ar.edu.utn.frba.dds.fuentes.proxy;
 
 import ar.edu.utn.frba.dds.entities.Hecho;
 import ar.edu.utn.frba.dds.entities.TipoFuente;
-import ar.edu.utn.frba.dds.entities.dto.input.MetadataDTO;
 import ar.edu.utn.frba.dds.entities.dto.input.ProxyDto.ProxyResponse;
 import ar.edu.utn.frba.dds.fuentes.IFuente;
-import ar.edu.utn.frba.dds.fuentes.estatica.FuenteEstatica;
 import java.time.LocalDateTime;
 import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
-
 import java.util.List;
 
 @Component
@@ -30,15 +26,6 @@ public class FuenteProxy implements IFuente {
         this.fuente = fuente;
         this.mapper = mapper;
     }
-
-    @Override
-    public Mono<List<Hecho>> importarHechos() {
-        return fuente.buscarHechos()
-                .map(dtos -> dtos.stream()
-                        .map(mapper::aDominio)
-                        .toList());
-    }
-
 
     @Override
     public Iterable<List<Hecho>> importarHechosPaginado(LocalDateTime fecha) {
@@ -79,10 +66,5 @@ public class FuenteProxy implements IFuente {
                 return hechos;
             }
         };
-    }
-
-    @Override
-    public MetadataDTO getMetadata() {
-        return null;
     }
 }

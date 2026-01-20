@@ -2,7 +2,6 @@ package ar.edu.utn.frba.dds.fuentes.dinamica;
 import ar.edu.utn.frba.dds.entities.Hecho;
 import ar.edu.utn.frba.dds.entities.TipoFuente;
 import ar.edu.utn.frba.dds.entities.dto.input.HechoDinamicoDto;
-import ar.edu.utn.frba.dds.entities.dto.input.MetadataDTO;
 import ar.edu.utn.frba.dds.entities.dto.input.PageResponse;
 import ar.edu.utn.frba.dds.entities.dto.output.NuevoHechoDinamicaDTO;
 import ar.edu.utn.frba.dds.fuentes.IFuente;
@@ -32,14 +31,6 @@ public class FuenteDinamica implements IFuente {
     }
 
     @Override
-    public Mono<List<Hecho>> importarHechos() {
-        return fuente.buscarHechos()
-                .map(dtos -> dtos.stream()
-                        .map(mapper::aDominio)
-                        .toList());
-    }
-
-    @Override
     public Iterable<List<Hecho>> importarHechosPaginado(LocalDateTime fecha) {
         return () -> new Iterator<>() {
             private int page = 0;
@@ -57,7 +48,8 @@ public class FuenteDinamica implements IFuente {
                 }
 
                 PageResponse<HechoDinamicoDto> pagina = fuente.buscarHechosPaginable(page, 100, fecha);
-                if (pagina.getContent() == null || pagina.getContent().isEmpty()) {
+              pagina.getContent();
+              if (pagina.getContent().isEmpty()) {
                     finished = true;
                     logger.info("FUENTE_DINAMICA: no hay hechos a importar");
                     return List.of();
@@ -80,12 +72,6 @@ public class FuenteDinamica implements IFuente {
             }
         };
     }
-
-    @Override
-    public MetadataDTO getMetadata() {
-        return fuente.buscarMetadata();
-    }
-
     public Mono<Hecho> crearHecho(NuevoHechoDinamicaDTO hecho){
         return fuente.crearHecho(hecho)
                 .map(mapper::aDominio);

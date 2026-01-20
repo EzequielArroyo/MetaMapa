@@ -8,7 +8,6 @@ import ar.edu.utn.frba.dds.entities.filtro.HechoSpecification;
 import ar.edu.utn.frba.dds.repositories.ICategoriaRepository;
 import ar.edu.utn.frba.dds.repositories.IHechoRepository;
 import ar.edu.utn.frba.dds.services.IHechoService;
-import ar.edu.utn.frba.dds.services.IMetadataService;
 import ar.edu.utn.frba.dds.utils.HechoMapper;
 import ar.edu.utn.frba.dds.utils.IReader;
 
@@ -38,7 +37,6 @@ public class HechoService implements IHechoService {
   private final ICategoriaRepository categoriaRepository;
   private final IHechoRepository hechoRepository;
   private final IHechoRepository hechoNewRepository;
-  private final IMetadataService metadataService;
   private final IWebClient webClient;
   private final HechoMapper hechoMapper;
   private static final Logger logger = LoggerFactory.getLogger(HechoService.class);
@@ -46,12 +44,11 @@ public class HechoService implements IHechoService {
   private int batchSize;
 
 
-  public HechoService(IReader csvIReader, ICategoriaRepository categoriaRepository, IHechoRepository hechoRepository, IHechoRepository hechoNewRepository, IMetadataService metadataService, IWebClient webClient, HechoMapper hechoMapper) {
+  public HechoService(IReader csvIReader, ICategoriaRepository categoriaRepository, IHechoRepository hechoRepository, IHechoRepository hechoNewRepository, IWebClient webClient, HechoMapper hechoMapper) {
     this.csvIReader = csvIReader;
     this.categoriaRepository = categoriaRepository;
     this.hechoRepository = hechoRepository;
     this.hechoNewRepository = hechoNewRepository;
-    this.metadataService = metadataService;
     this.webClient = webClient;
     this.hechoMapper = hechoMapper;
   }
@@ -80,7 +77,6 @@ public class HechoService implements IHechoService {
           lote -> guardarLote(lote, nombreArchivo)
       );
 
-      metadataService.actualizarMetadata();
       logger.info("Metadata actualizada correctamente");
 
     } catch (Exception e) {
